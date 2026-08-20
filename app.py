@@ -25,6 +25,7 @@ from psycopg.rows import dict_row
 # ---------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE_URL = os.environ.get("DATABASE_URL")
+DB_INITIALIZED = False
 ADMIN_PASSWORD = "dewagantengbanget123"          # <-- ganti kalau mau
 SECRET_KEY = "ganti-secret-key-ini-di-produksi"
 
@@ -37,10 +38,14 @@ app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024   # 8 MB (buat upload design 
 # Database helper
 # ---------------------------------------------------------------------------
 def get_db():
+    global DB_INITIALIZED
     if "db" not in g:
         if not DATABASE_URL:
             raise RuntimeError("DATABASE_URL belum dikonfigurasi")
         g.db = psycopg.connect(DATABASE_URL, row_factory=dict_row)
+        if not DB_INITIALIZED:
+            init_db()
+            DB_INITIALIZED = True
     return g.db
 
 
@@ -513,8 +518,6 @@ def api_admin_settings_update():
 
 
 # ---------------------------------------------------------------------------
-init_db()
-
 if __name__ == "__main__":
     print("Ospek Kit siap. Buka http://127.0.0.1:5000  |  admin: /admin")
     app.run(debug=True, port=5000)
