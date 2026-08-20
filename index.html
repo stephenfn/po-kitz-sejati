@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ospek Kit — Pre-Order Perlengkapan Ospek Unpad Jatinangor</title>
+  <meta name="description" content="Pre-order perlengkapan ospek Unpad Jatinangor: Prabu Kit, Fakultas Kit, Jurusan Kit. Cari, request, bayar QRIS.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- Ticker -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker__track" id="ticker"></div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="nav">
+    <div class="wrap nav__inner">
+      <a href="#top" class="brand">
+        <span class="brand__logo"><span class="material-symbols-rounded">backpack</span></span>
+        <span id="brandName">Ospek<b>Kit</b></span>
+      </a>
+      <nav class="nav__links" id="navLinks">
+        <a href="#katalog">Katalog</a>
+        <a href="#request">Request Barang</a>
+        <a href="#kontak">Contact Us</a>
+      </nav>
+      <button class="cart-btn" id="cartBtn">
+        <span class="material-symbols-rounded">shopping_cart</span>
+        <span>Keranjang</span>
+        <span class="cart-btn__count" id="cartCount">0</span>
+      </button>
+      <button class="nav__burger" id="burger" aria-label="Menu"><span class="material-symbols-rounded">menu</span></button>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__blobs"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+      <div class="wrap hero__grid">
+        <div>
+          <span class="eyebrow"><span class="material-symbols-rounded" style="font-size:16px">bolt</span> Pre-Order Dibuka</span>
+          <h1 id="heroTitle">Semua Perlengkapan Ospek, <span class="hl">Satu Tempat.</span></h1>
+          <p class="lead" id="heroSubtitle">Prabu Kit, Fakultas Kit, sampai Jurusan Kit — pre-order sekarang, ambil sebelum hari-H.</p>
+          <div class="hero__search">
+            <span class="material-symbols-rounded">search</span>
+            <input id="heroSearch" type="text" placeholder="Cari kursi goyang, pita medic, Promag, nametag…">
+            <button id="heroSearchBtn">Cari</button>
+          </div>
+          <div class="hero__stats">
+            <div><b id="statProducts">0</b><span>Item ready</span></div>
+            <div><b>QRIS</b><span>Bayar online</span></div>
+            <div><b>Jatinangor</b><span>Area antar</span></div>
+          </div>
+        </div>
+        <div class="hero__card" id="heroCard"><!-- diisi JS --></div>
+      </div>
+    </section>
+
+    <!-- Katalog -->
+    <section class="section" id="katalog">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <div>
+            <h2>Katalog Kit &amp; Perlengkapan</h2>
+            <p>Pilih paket kit atau beli satuan. Stok update langsung dari panitia.</p>
+          </div>
+        </div>
+
+        <div class="search-inline reveal">
+          <span class="material-symbols-rounded">search</span>
+          <input id="catalogSearch" type="text" placeholder="Cari barang di katalog…">
+          <button id="catalogClear" title="Bersihkan"><span class="material-symbols-rounded">close</span></button>
+        </div>
+
+        <div class="filters reveal" id="filters">
+          <button class="filter active" data-cat="semua"><span class="material-symbols-rounded" style="font-size:18px">grid_view</span> Semua</button>
+          <button class="filter" data-cat="prabu"><span class="material-symbols-rounded" style="font-size:18px">school</span> Prabu Kit</button>
+          <button class="filter" data-cat="fakultas"><span class="material-symbols-rounded" style="font-size:18px">apartment</span> Fakultas Kit</button>
+          <button class="filter" data-cat="jurusan"><span class="material-symbols-rounded" style="font-size:18px">menu_book</span> Jurusan Kit</button>
+          <button class="filter" data-cat="satuan"><span class="material-symbols-rounded" style="font-size:18px">category</span> Satuan</button>
+        </div>
+
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- Request band -->
+    <section class="section" id="request">
+      <div class="wrap">
+        <div class="request-band reveal">
+          <div class="inner">
+            <div>
+              <h2>Barangnya nggak ada? Request aja.</h2>
+              <p>Butuh kursi goyang warna tertentu, pita medic, Promag, Oronamin C, nametag, atau name bag custom? Submit permintaanmu — panitia bakal usahain adain. Untuk nametag &amp; name bag kamu bisa upload design sendiri.</p>
+            </div>
+            <button class="btn-yellow" id="openRequest">
+              <span class="material-symbols-rounded">add_shopping_cart</span> Request Barang
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="kontak">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <div>
+            <h2>Contact Us</h2>
+            <p>Ada pertanyaan soal pesanan atau request? Hubungi contact person kami.</p>
+          </div>
+        </div>
+        <div class="contact-grid reveal" id="contactGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <div>
+        <a href="#top" class="brand" style="color:#fff">
+          <span class="brand__logo"><span class="material-symbols-rounded">backpack</span></span>
+          <span id="footBrand">OspekKit</span>
+        </a>
+        <p>Pre-order perlengkapan ospek Universitas Padjadjaran, Jatinangor. Prabu, Fakultas, Jurusan — lengkap.</p>
+      </div>
+      <div>
+        <h4>Navigasi</h4>
+        <a href="#katalog">Katalog</a>
+        <a href="#request">Request Barang</a>
+        <a href="#kontak">Contact Us</a>
+      </div>
+      <div>
+        <h4>Kategori</h4>
+        <a href="#" data-jump="prabu">Prabu Kit</a>
+        <a href="#" data-jump="fakultas">Fakultas Kit</a>
+        <a href="#" data-jump="jurusan">Jurusan Kit</a>
+        <a href="#" data-jump="satuan">Barang Satuan</a>
+      </div>
+    </div>
+    <div class="wrap footer__bottom">
+      <span id="footNote">© <span id="year"></span> Ospek Kit — Unpad Jatinangor. Prototype.</span>
+    </div>
+  </footer>
+
+  <!-- Overlay: detail produk -->
+  <div class="overlay" id="pdOverlay">
+    <div class="modal">
+      <button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button>
+      <div class="pd" id="pdBody"></div>
+    </div>
+  </div>
+
+  <!-- Overlay: request -->
+  <div class="overlay" id="reqOverlay">
+    <div class="modal">
+      <button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button>
+      <div class="pd">
+        <span class="pd__cat">Formulir Request</span>
+        <h2>Request Barang</h2>
+        <p class="pd__desc">Isi barang yang kamu butuhkan. Kalau nametag/name bag, kamu bisa upload design.</p>
+        <div class="field"><label>Nama barang *</label><input id="reqItem" placeholder="cth: Kursi goyang / Pita medic / Nametag"></div>
+        <div class="row2">
+          <div class="field"><label>Varian / warna / catatan</label><input id="reqVariant" placeholder="cth: warna hijau"></div>
+          <div class="field"><label>Jumlah</label><input id="reqQty" type="number" min="1" value="1"></div>
+        </div>
+        <div class="field"><label>Detail tambahan</label><textarea id="reqNote" placeholder="Jelaskan spesifikasi yang kamu mau…"></textarea></div>
+        <div class="field">
+          <label>Upload design (opsional, buat nametag / name bag)</label>
+          <div class="upload-box" id="reqUploadBox">
+            <span class="material-symbols-rounded">upload_file</span>
+            <div>Klik untuk upload gambar design</div>
+          </div>
+          <input type="file" id="reqUpload" accept="image/*" hidden>
+          <img class="upload-preview" id="reqPreview" hidden>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Nama kamu</label><input id="reqName" placeholder="Nama"></div>
+          <div class="field"><label>WhatsApp</label><input id="reqWa" placeholder="08xxx"></div>
+        </div>
+        <button class="btn-primary" id="reqSubmit"><span class="material-symbols-rounded">send</span> Kirim Request</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay: checkout / QR -->
+  <div class="overlay" id="coOverlay">
+    <div class="modal">
+      <button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button>
+      <div id="coBody"></div>
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <aside class="drawer" id="cartDrawer">
+    <div class="drawer__head">
+      <h3>Keranjang</h3>
+      <button class="modal__x" style="position:static;margin:0;float:none" id="cartClose"><span class="material-symbols-rounded">close</span></button>
+    </div>
+    <div class="drawer__body" id="cartBody"></div>
+    <div class="drawer__foot" id="cartFoot"></div>
+  </aside>
+  <div class="overlay" id="drawerOverlay" style="z-index:105"></div>
+
+  <!-- Toasts -->
+  <div class="toasts" id="toasts"></div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

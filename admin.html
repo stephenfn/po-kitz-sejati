@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin — Ospek Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body">
+
+  <!-- Login gate -->
+  <div class="login-gate" id="loginGate">
+    <div class="login-blobs"><span class="blob b1"></span><span class="blob b2"></span></div>
+    <div class="login-card">
+      <div class="brand" style="justify-content:center;margin-bottom:6px">
+        <span class="brand__logo"><span class="material-symbols-rounded">shield_person</span></span>
+        <span>Ospek<b>Kit</b></span>
+      </div>
+      <h2>Panel Admin</h2>
+      <p>Masuk buat atur katalog, stok, request & tampilan.</p>
+      <div class="field" style="margin-top:16px">
+        <label>Password</label>
+        <input id="pwd" type="password" placeholder="Masukkan password" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" id="loginBtn" style="width:100%"><span class="material-symbols-rounded">login</span> Masuk</button>
+      <a href="/" class="back-link"><span class="material-symbols-rounded" style="font-size:18px;vertical-align:-4px">arrow_back</span> Kembali ke toko</a>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div class="admin-app" id="adminApp" hidden>
+    <aside class="side">
+      <div class="side__brand">
+        <span class="brand__logo"><span class="material-symbols-rounded">backpack</span></span>
+        <div><b>Ospek Kit</b><small>Panel Admin</small></div>
+      </div>
+      <nav class="side__nav">
+        <button class="side__link active" data-tab="dash"><span class="material-symbols-rounded">dashboard</span> Dashboard</button>
+        <button class="side__link" data-tab="products"><span class="material-symbols-rounded">inventory_2</span> Produk &amp; Stok</button>
+        <button class="side__link" data-tab="requests"><span class="material-symbols-rounded">inbox</span> Request Masuk <span class="pill" id="reqPill" hidden>0</span></button>
+        <button class="side__link" data-tab="orders"><span class="material-symbols-rounded">receipt_long</span> Pesanan <span class="pill" id="ordPill" hidden>0</span></button>
+        <button class="side__link" data-tab="settings"><span class="material-symbols-rounded">tune</span> Tampilan &amp; Kontak</button>
+      </nav>
+      <div class="side__foot">
+        <a href="/" target="_blank" class="side__link"><span class="material-symbols-rounded">storefront</span> Lihat Toko</a>
+        <button class="side__link" id="logoutBtn"><span class="material-symbols-rounded">logout</span> Keluar</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-top">
+        <button class="side-toggle" id="sideToggle"><span class="material-symbols-rounded">menu</span></button>
+        <h1 id="tabTitle">Dashboard</h1>
+        <button class="btn-primary" id="addProductBtn" style="flex:0"><span class="material-symbols-rounded">add</span> Tambah Produk</button>
+      </header>
+
+      <!-- Dashboard -->
+      <section class="tab active" id="tab-dash">
+        <div class="stat-grid" id="statGrid"></div>
+        <div class="panel">
+          <h3>Aksi cepat</h3>
+          <div class="quick-actions">
+            <button data-go="products"><span class="material-symbols-rounded">add_box</span> Tambah kit / barang</button>
+            <button data-go="requests"><span class="material-symbols-rounded">inbox</span> Cek request pengunjung</button>
+            <button data-go="settings"><span class="material-symbols-rounded">campaign</span> Ubah banner / iklan</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Produk -->
+      <section class="tab" id="tab-products">
+        <div class="table-wrap">
+          <table id="productTable">
+            <thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Requests -->
+      <section class="tab" id="tab-requests">
+        <div id="requestList" class="req-list"></div>
+      </section>
+
+      <!-- Orders -->
+      <section class="tab" id="tab-orders">
+        <div id="orderList" class="order-list"></div>
+      </section>
+
+      <!-- Settings -->
+      <section class="tab" id="tab-settings">
+        <div class="panel">
+          <h3>Identitas &amp; Hero</h3>
+          <div class="field"><label>Nama brand</label><input id="s_brand"></div>
+          <div class="field"><label>Judul hero</label><input id="s_hero_title"></div>
+          <div class="field"><label>Subjudul hero</label><textarea id="s_hero_subtitle"></textarea></div>
+          <div class="field"><label>Teks banner berjalan (pisah pakai •)</label><input id="s_banner_text"></div>
+        </div>
+        <div class="panel">
+          <h3>Kontak &amp; Contact Person</h3>
+          <div class="row2">
+            <div class="field"><label>WhatsApp</label><input id="s_contact_whatsapp"></div>
+            <div class="field"><label>Email</label><input id="s_contact_email"></div>
+          </div>
+          <div class="row2">
+            <div class="field"><label>Instagram</label><input id="s_contact_instagram"></div>
+            <div class="field"><label>Contact person</label><input id="s_contact_person"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Pembayaran</h3>
+          <div class="field"><label>Catatan QR (muncul di halaman bayar)</label><textarea id="s_qr_note"></textarea></div>
+          <p class="hint">QR masih dummy. Nanti QRIS asli bisa diganti lewat integrasi payment gateway.</p>
+        </div>
+        <button class="btn-primary" id="saveSettings" style="flex:0"><span class="material-symbols-rounded">save</span> Simpan Pengaturan</button>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal produk (tambah/edit) -->
+  <div class="overlay" id="prodOverlay">
+    <div class="modal">
+      <button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button>
+      <div class="pd">
+        <h2 id="prodModalTitle">Tambah Produk</h2>
+        <input type="hidden" id="p_id">
+        <div class="field"><label>Nama produk *</label><input id="p_name" placeholder="cth: Fakultas Kit — FEB"></div>
+        <div class="row2">
+          <div class="field"><label>Kategori</label>
+            <select id="p_category">
+              <option value="prabu">Prabu Kit (Ospek Kampus)</option>
+              <option value="fakultas">Fakultas Kit</option>
+              <option value="jurusan">Jurusan Kit</option>
+              <option value="satuan">Satuan / barang lepas</option>
+            </select>
+          </div>
+          <div class="field"><label>Harga (Rp)</label><input id="p_price" type="number" min="0" value="0"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>Fakultas (opsional)</label><input id="p_fakultas" placeholder="cth: FEB"></div>
+          <div class="field"><label>Jurusan (opsional)</label><input id="p_jurusan" placeholder="cth: Manajemen"></div>
+        </div>
+        <div class="field"><label>Deskripsi</label><textarea id="p_description"></textarea></div>
+        <div class="row2">
+          <div class="field"><label>Stok</label><input id="p_stock" type="number" min="0" value="0"></div>
+          <div class="field"><label>Warna aksen</label><input id="p_accent" type="color" value="#2450d8" style="height:46px;padding:4px"></div>
+        </div>
+        <div class="field"><label>Ikon (nama Material Symbol)</label>
+          <input id="p_icon" placeholder="cth: backpack, chair, medical_services">
+          <p class="hint">Daftar ikon: fonts.google.com/icons — pakai nama snake_case.</p>
+        </div>
+        <div class="field"><label>Isi kit (pisah baris)</label><textarea id="p_items" placeholder="Nametag&#10;Pita medic&#10;Buku panduan"></textarea></div>
+        <div class="field"><label>Varian / warna (pisah baris)</label><textarea id="p_variants" placeholder="Ijo&#10;Kuning&#10;Merah&#10;Putih"></textarea></div>
+        <div class="check-row">
+          <label class="check"><input type="checkbox" id="p_custom"> Pembeli bisa upload design (nametag/name bag)</label>
+          <label class="check"><input type="checkbox" id="p_featured"> Jadikan unggulan / iklan</label>
+          <label class="check"><input type="checkbox" id="p_active" checked> Tampilkan di toko</label>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button class="btn-ghost" data-close style="flex:1">Batal</button>
+          <button class="btn-primary" id="saveProduct"><span class="material-symbols-rounded">save</span> Simpan Produk</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

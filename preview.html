@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ospek Kit — Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <style>
+/* ==========================================================================
+   Ospek Kit — style.css
+   Tema: Navy Unpad + Kuning Emas
+   Font: Bricolage Grotesque (display) + Plus Jakarta Sans (body)
+   ========================================================================== */
+
+:root {
+  --navy:        #0d1f4c;
+  --navy-2:      #12285f;
+  --blue:        #2450d8;
+  --blue-2:      #3f6bf5;
+  --blue-soft:   #e9f0ff;
+  --yellow:      #ffcb2e;
+  --yellow-2:    #ffb703;
+  --yellow-soft: #fff4cf;
+  --bg:          #eef3fc;
+  --card:        #ffffff;
+  --ink:         #101a33;
+  --muted:       #5b6885;
+  --line:        #dde5f5;
+  --ok:          #1e9e6a;
+  --danger:      #d1394b;
+
+  --radius:   18px;
+  --radius-sm:12px;
+  --shadow:   0 10px 30px -12px rgba(13, 31, 76, .28);
+  --shadow-lg:0 26px 60px -20px rgba(13, 31, 76, .45);
+  --ease:     cubic-bezier(.2, .8, .2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .display {
+  font-family: "Bricolage Grotesque", "Plus Jakarta Sans", sans-serif;
+  line-height: 1.04;
+  letter-spacing: -.02em;
+  font-weight: 800;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+.material-symbols-rounded { font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24; }
+
+.wrap { width: min(1180px, 92vw); margin-inline: auto; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ---------- Marquee ticker atas ---------- */
+.ticker {
+  background: var(--navy);
+  color: var(--yellow);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+  border-bottom: 2px solid var(--yellow);
+}
+.ticker__track {
+  display: inline-block;
+  padding: 8px 0;
+  animation: ticker 26s linear infinite;
+}
+.ticker:hover .ticker__track { animation-play-state: paused; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ---------- Navbar ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 60;
+  background: rgba(255, 255, 255, .82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.nav__inner { display: flex; align-items: center; gap: 20px; height: 68px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: "Bricolage Grotesque"; font-weight: 800; font-size: 1.25rem; }
+.brand__logo {
+  width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--blue), var(--navy));
+  color: var(--yellow); box-shadow: var(--shadow);
+  transition: transform .5s var(--ease);
+}
+.brand:hover .brand__logo { transform: rotate(-8deg) scale(1.06); }
+.brand b { color: var(--blue); }
+
+.nav__links { display: flex; gap: 4px; margin-left: auto; }
+.nav__links a {
+  padding: 9px 15px; border-radius: 10px; font-weight: 600; font-size: .94rem;
+  color: var(--muted); position: relative; transition: color .25s, background .25s;
+}
+.nav__links a::after {
+  content: ""; position: absolute; left: 15px; right: 15px; bottom: 5px; height: 2px;
+  background: var(--yellow); transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease);
+}
+.nav__links a:hover { color: var(--navy); background: var(--blue-soft); }
+.nav__links a:hover::after { transform: scaleX(1); }
+
+.cart-btn {
+  position: relative; display: inline-flex; align-items: center; gap: 8px;
+  background: var(--navy); color: #fff; padding: 10px 16px; border-radius: 12px;
+  font-weight: 700; border: none; cursor: pointer; transition: transform .2s var(--ease), box-shadow .2s;
+}
+.cart-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.cart-btn__count {
+  position: absolute; top: -7px; right: -7px; min-width: 20px; height: 20px; padding: 0 5px;
+  background: var(--yellow); color: var(--navy); border-radius: 999px; font-size: .72rem;
+  font-weight: 800; display: grid; place-items: center; border: 2px solid #fff;
+  transform: scale(0); transition: transform .3s var(--ease);
+}
+.cart-btn__count.show { transform: scale(1); }
+.nav__burger { display: none; background: none; border: none; cursor: pointer; color: var(--navy); }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; padding: 74px 0 56px; overflow: hidden; }
+.hero__blobs { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.blob {
+  position: absolute; border-radius: 50%; filter: blur(38px); opacity: .5;
+  animation: float 14s ease-in-out infinite;
+}
+.blob.b1 { width: 340px; height: 340px; background: var(--blue-2); top: -80px; left: -60px; }
+.blob.b2 { width: 300px; height: 300px; background: var(--yellow); bottom: -90px; right: -40px; animation-delay: -4s; }
+.blob.b3 { width: 220px; height: 220px; background: #a9c2ff; top: 40%; right: 22%; animation-delay: -8s; }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(24px, -30px) scale(1.08); }
+  66% { transform: translate(-18px, 20px) scale(.95); }
+}
+
+.hero__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 7px; background: var(--navy); color: var(--yellow);
+  font-weight: 700; font-size: .78rem; letter-spacing: .05em; text-transform: uppercase;
+  padding: 7px 13px; border-radius: 999px; margin-bottom: 18px;
+}
+.hero h1 { font-size: clamp(2.3rem, 5.2vw, 3.7rem); color: var(--navy); }
+.hero h1 .hl { position: relative; color: var(--blue); white-space: nowrap; }
+.hero h1 .hl::after {
+  content: ""; position: absolute; left: -2px; right: -2px; bottom: 4px; height: .32em; z-index: -1;
+  background: var(--yellow); border-radius: 4px; transform: rotate(-1.2deg);
+}
+.hero p.lead { font-size: 1.08rem; color: var(--muted); margin: 20px 0 26px; max-width: 46ch; }
+
+.hero__search {
+  display: flex; align-items: center; gap: 8px; background: #fff; border: 2px solid var(--line);
+  border-radius: 16px; padding: 8px 8px 8px 16px; box-shadow: var(--shadow);
+  transition: border-color .25s, box-shadow .25s;
+}
+.hero__search:focus-within { border-color: var(--blue); box-shadow: 0 0 0 5px var(--blue-soft); }
+.hero__search .material-symbols-rounded { color: var(--muted); }
+.hero__search input { flex: 1; border: none; outline: none; font: inherit; font-size: 1rem; background: transparent; }
+.hero__search button {
+  background: var(--blue); color: #fff; border: none; padding: 12px 20px; border-radius: 11px;
+  font-weight: 700; cursor: pointer; transition: background .25s, transform .2s;
+}
+.hero__search button:hover { background: var(--navy); transform: translateY(-1px); }
+
+.hero__stats { display: flex; gap: 26px; margin-top: 24px; }
+.hero__stats div { }
+.hero__stats b { font-family: "Bricolage Grotesque"; font-size: 1.5rem; color: var(--navy); display: block; }
+.hero__stats span { font-size: .82rem; color: var(--muted); }
+
+/* kartu float di hero kanan */
+.hero__card {
+  background: var(--card); border-radius: 24px; padding: 22px; box-shadow: var(--shadow-lg);
+  border: 1px solid var(--line); transform: rotate(1.4deg); position: relative;
+  animation: cardIn .8s var(--ease) both;
+}
+.hero__card::before {
+  content: "READY"; position: absolute; top: 16px; right: -8px; background: var(--yellow);
+  color: var(--navy); font-weight: 800; font-size: .72rem; letter-spacing: .08em; padding: 5px 14px;
+  border-radius: 6px; box-shadow: var(--shadow); transform: rotate(4deg);
+}
+.hero__card h3 { color: var(--navy); font-size: 1.15rem; margin-bottom: 4px; }
+.hero__card .price { color: var(--blue); font-weight: 800; font-size: 1.3rem; }
+.hero__chip-row { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0; }
+.chip {
+  background: var(--blue-soft); color: var(--navy); font-size: .78rem; font-weight: 600;
+  padding: 5px 11px; border-radius: 999px;
+}
+.hero__tile {
+  height: 128px; border-radius: 16px; display: grid; place-items: center; margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--blue), var(--navy));
+}
+.hero__tile .material-symbols-rounded { font-size: 62px; color: var(--yellow); }
+@keyframes cardIn { from { opacity: 0; transform: rotate(1.4deg) translateY(26px); } }
+
+/* ---------- Section umum ---------- */
+.section { padding: 56px 0; }
+.section__head { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 26px; flex-wrap: wrap; }
+.section__head h2 { font-size: clamp(1.7rem, 3.6vw, 2.4rem); color: var(--navy); }
+.section__head p { color: var(--muted); max-width: 52ch; }
+
+/* filter kategori */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
+.filter {
+  border: 2px solid var(--line); background: #fff; color: var(--muted); padding: 9px 18px;
+  border-radius: 999px; font-weight: 700; font-size: .92rem; cursor: pointer;
+  transition: all .25s var(--ease); display: inline-flex; align-items: center; gap: 7px;
+}
+.filter:hover { border-color: var(--blue); color: var(--navy); transform: translateY(-2px); }
+.filter.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+.filter.active .material-symbols-rounded { color: var(--yellow); }
+
+.search-inline {
+  display: flex; align-items: center; gap: 8px; background: #fff; border: 2px solid var(--line);
+  border-radius: 12px; padding: 6px 6px 6px 14px; margin-bottom: 22px; max-width: 420px;
+  transition: border-color .25s, box-shadow .25s;
+}
+.search-inline:focus-within { border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-soft); }
+.search-inline input { flex: 1; border: none; outline: none; font: inherit; background: transparent; }
+.search-inline .material-symbols-rounded { color: var(--muted); }
+.search-inline button { background: none; border: none; cursor: pointer; color: var(--muted); display: grid; place-items: center; padding: 6px; border-radius: 8px; }
+.search-inline button:hover { background: var(--blue-soft); color: var(--navy); }
+
+/* ---------- Grid produk ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(258px, 1fr)); gap: 22px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; cursor: pointer; position: relative;
+  transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
+  opacity: 0; transform: translateY(18px);
+}
+.card.in { opacity: 1; transform: translateY(0); }
+.card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); border-color: transparent; }
+.card__media { height: 148px; display: grid; place-items: center; position: relative; overflow: hidden; }
+.card__media .material-symbols-rounded { font-size: 60px; color: #fff; z-index: 1; transition: transform .5s var(--ease); font-variation-settings: 'FILL' 1; }
+.card:hover .card__media .material-symbols-rounded { transform: scale(1.14) rotate(-4deg); }
+.card__media::after {
+  content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 70% 20%, rgba(255,255,255,.28), transparent 60%);
+}
+.card__badge {
+  position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--yellow); color: var(--navy);
+  font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+}
+.card__fav {
+  position: absolute; top: 10px; right: 10px; z-index: 2; background: rgba(255,255,255,.9); border: none;
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  color: var(--muted); transition: transform .2s, color .2s; opacity: 0;
+}
+.card:hover .card__fav { opacity: 1; }
+.card__fav:hover { transform: scale(1.14); color: var(--danger); }
+.card__body { padding: 15px 16px 17px; }
+.card__cat { font-size: .72rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .05em; }
+.card__title { font-family: "Bricolage Grotesque"; font-weight: 700; font-size: 1.06rem; color: var(--navy); margin: 3px 0 6px; }
+.card__desc { font-size: .86rem; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 40px; }
+.card__foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.card__price { font-family: "Bricolage Grotesque"; font-weight: 800; color: var(--navy); font-size: 1.16rem; }
+.card__stock { font-size: .74rem; font-weight: 700; }
+.card__stock.ok { color: var(--ok); }
+.card__stock.low { color: var(--yellow-2); }
+.card__stock.out { color: var(--danger); }
+.card__add {
+  width: 100%; margin-top: 13px; border: none; background: var(--blue-soft); color: var(--navy);
+  font-weight: 700; padding: 11px; border-radius: 11px; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; gap: 7px; transition: background .25s, color .25s, transform .15s;
+}
+.card__add:hover { background: var(--navy); color: #fff; }
+.card__add:hover .material-symbols-rounded { color: var(--yellow); }
+.card__add:active { transform: scale(.97); }
+
+.empty {
+  grid-column: 1 / -1; text-align: center; padding: 56px 20px; color: var(--muted);
+  background: #fff; border: 2px dashed var(--line); border-radius: var(--radius);
+}
+.empty .material-symbols-rounded { font-size: 48px; color: var(--blue); }
+.empty b { color: var(--navy); display: block; margin: 8px 0 4px; font-size: 1.1rem; }
+.empty button {
+  margin-top: 14px; background: var(--yellow); color: var(--navy); border: none; font-weight: 800;
+  padding: 11px 22px; border-radius: 11px; cursor: pointer; transition: transform .2s;
+}
+.empty button:hover { transform: translateY(-2px); }
+
+/* ---------- Request band ---------- */
+.request-band {
+  background: linear-gradient(135deg, var(--navy), var(--blue)); color: #fff; border-radius: 26px;
+  padding: 40px; position: relative; overflow: hidden;
+}
+.request-band::before, .request-band::after {
+  content: ""; position: absolute; border-radius: 50%; background: rgba(255,255,255,.07);
+}
+.request-band::before { width: 260px; height: 260px; top: -80px; right: -40px; }
+.request-band::after { width: 180px; height: 180px; bottom: -70px; left: 30%; }
+.request-band .inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center; }
+.request-band h2 { color: #fff; }
+.request-band p { color: rgba(255,255,255,.85); max-width: 54ch; margin-top: 8px; }
+.request-band .btn-yellow {
+  background: var(--yellow); color: var(--navy); border: none; font-weight: 800; padding: 15px 26px;
+  border-radius: 14px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 9px;
+  box-shadow: 0 12px 26px -8px rgba(255,203,46,.6); transition: transform .2s var(--ease);
+}
+.request-band .btn-yellow:hover { transform: translateY(-3px) scale(1.02); }
+
+/* ---------- Contact ---------- */
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+.contact-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
+  transition: transform .3s var(--ease), box-shadow .3s;
+}
+.contact-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
+.contact-card .ico {
+  width: 48px; height: 48px; border-radius: 13px; display: grid; place-items: center; margin-bottom: 14px;
+  background: var(--blue-soft); color: var(--blue);
+}
+.contact-card:hover .ico { background: var(--navy); color: var(--yellow); }
+.contact-card h3 { font-size: 1.05rem; color: var(--navy); }
+.contact-card a, .contact-card span { color: var(--muted); font-weight: 600; }
+.contact-card a:hover { color: var(--blue); }
+
+/* ---------- Footer ---------- */
+.footer { background: var(--navy); color: #fff; padding: 46px 0 24px; margin-top: 40px; }
+.footer__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px; }
+.footer p { color: rgba(255,255,255,.7); font-size: .9rem; margin-top: 10px; max-width: 40ch; }
+.footer h4 { color: var(--yellow); font-size: .82rem; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+.footer a { display: block; color: rgba(255,255,255,.8); padding: 4px 0; font-size: .92rem; transition: color .2s, padding-left .2s; }
+.footer a:hover { color: var(--yellow); padding-left: 5px; }
+.footer__bottom { border-top: 1px solid rgba(255,255,255,.14); margin-top: 30px; padding-top: 18px; text-align: center; color: rgba(255,255,255,.6); font-size: .84rem; }
+
+/* ==========================================================================
+   Overlay / Modal / Drawer / Toast
+   ========================================================================== */
+.overlay {
+  position: fixed; inset: 0; z-index: 100; background: rgba(13,31,76,.5);
+  backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; transition: opacity .3s;
+}
+.overlay.open { display: flex; opacity: 1; }
+
+.modal {
+  background: #fff; border-radius: 22px; width: min(720px, 100%); max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow-lg); transform: translateY(26px) scale(.97); opacity: 0;
+  transition: transform .4s var(--ease), opacity .4s;
+}
+.overlay.open .modal { transform: translateY(0) scale(1); opacity: 1; }
+.modal__x {
+  position: sticky; top: 12px; float: right; margin: 12px 12px 0 0; background: var(--bg); border: none;
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+  color: var(--navy); z-index: 3; transition: background .2s, transform .2s;
+}
+.modal__x:hover { background: var(--danger); color: #fff; transform: rotate(90deg); }
+
+/* modal detail produk */
+.pd { padding: 4px 28px 28px; }
+.pd__media { height: 190px; border-radius: 18px; display: grid; place-items: center; margin-bottom: 18px; }
+.pd__media .material-symbols-rounded { font-size: 84px; color: #fff; font-variation-settings: 'FILL' 1; }
+.pd__cat { font-size: .76rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .05em; }
+.pd h2 { color: var(--navy); font-size: 1.7rem; margin: 4px 0 8px; }
+.pd__price { font-family: "Bricolage Grotesque"; font-size: 1.7rem; font-weight: 800; color: var(--blue); }
+.pd__desc { color: var(--muted); margin: 12px 0 16px; }
+.pd__section-title { font-weight: 800; color: var(--navy); font-size: .92rem; margin: 16px 0 8px; display: flex; align-items: center; gap: 7px; }
+.pd__items { list-style: none; display: grid; gap: 6px; }
+.pd__items li { display: flex; align-items: center; gap: 9px; color: var(--ink); font-size: .92rem; }
+.pd__items .material-symbols-rounded { color: var(--ok); font-size: 20px; }
+.variant-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.variant {
+  border: 2px solid var(--line); background: #fff; padding: 8px 14px; border-radius: 10px; cursor: pointer;
+  font-weight: 600; font-size: .88rem; color: var(--muted); transition: all .2s var(--ease);
+}
+.variant:hover { border-color: var(--blue); }
+.variant.active { border-color: var(--navy); background: var(--navy); color: #fff; }
+
+.upload-box {
+  border: 2px dashed var(--line); border-radius: 14px; padding: 20px; text-align: center; cursor: pointer;
+  color: var(--muted); transition: border-color .2s, background .2s; margin-top: 6px;
+}
+.upload-box:hover { border-color: var(--blue); background: var(--blue-soft); }
+.upload-box .material-symbols-rounded { font-size: 32px; color: var(--blue); }
+.upload-preview { margin-top: 12px; border-radius: 12px; border: 1px solid var(--line); max-height: 160px; object-fit: contain; }
+
+.qty-row { display: flex; align-items: center; gap: 14px; margin-top: 18px; }
+.qty { display: inline-flex; align-items: center; border: 2px solid var(--line); border-radius: 12px; overflow: hidden; }
+.qty button { background: var(--bg); border: none; width: 40px; height: 42px; font-size: 1.2rem; cursor: pointer; color: var(--navy); transition: background .2s; }
+.qty button:hover { background: var(--blue-soft); }
+.qty input { width: 52px; text-align: center; border: none; outline: none; font: inherit; font-weight: 700; }
+
+.btn-primary {
+  background: var(--navy); color: #fff; border: none; padding: 14px 24px; border-radius: 13px;
+  font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 9px; font-size: 1rem;
+  transition: transform .2s var(--ease), box-shadow .2s; flex: 1; justify-content: center;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.btn-primary .material-symbols-rounded { color: var(--yellow); }
+.btn-ghost {
+  background: #fff; color: var(--navy); border: 2px solid var(--line); padding: 14px 20px; border-radius: 13px;
+  font-weight: 700; cursor: pointer; transition: border-color .2s;
+}
+.btn-ghost:hover { border-color: var(--navy); }
+
+/* ---------- Cart drawer ---------- */
+.drawer {
+  position: fixed; top: 0; right: 0; height: 100%; width: min(420px, 100%); background: #fff; z-index: 110;
+  box-shadow: var(--shadow-lg); transform: translateX(100%); transition: transform .4s var(--ease);
+  display: flex; flex-direction: column;
+}
+.drawer.open { transform: translateX(0); }
+.drawer__head { padding: 20px 22px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+.drawer__head h3 { color: var(--navy); }
+.drawer__body { flex: 1; overflow-y: auto; padding: 18px 22px; }
+.drawer__foot { border-top: 1px solid var(--line); padding: 18px 22px; }
+.cart-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); animation: slideIn .35s var(--ease) both; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(20px); } }
+.cart-item__ico { width: 52px; height: 52px; border-radius: 12px; display: grid; place-items: center; flex-shrink: 0; }
+.cart-item__ico .material-symbols-rounded { color: #fff; font-variation-settings: 'FILL' 1; }
+.cart-item__info { flex: 1; min-width: 0; }
+.cart-item__info b { color: var(--navy); font-size: .95rem; }
+.cart-item__info small { color: var(--muted); display: block; }
+.cart-item__price { color: var(--blue); font-weight: 800; }
+.cart-item .rm { background: none; border: none; color: var(--muted); cursor: pointer; padding: 2px; align-self: start; transition: color .2s; }
+.cart-item .rm:hover { color: var(--danger); }
+.cart-empty { text-align: center; color: var(--muted); padding: 60px 20px; }
+.cart-empty .material-symbols-rounded { font-size: 56px; color: var(--line); }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--muted); }
+.summary-row.total { color: var(--navy); font-weight: 800; font-size: 1.2rem; font-family: "Bricolage Grotesque"; }
+
+/* ---------- Form ---------- */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-weight: 700; font-size: .86rem; color: var(--navy); margin-bottom: 6px; }
+.field input, .field textarea, .field select {
+  width: 100%; border: 2px solid var(--line); border-radius: 11px; padding: 12px 14px; font: inherit;
+  background: #fff; outline: none; transition: border-color .2s, box-shadow .2s;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-soft); }
+.field textarea { resize: vertical; min-height: 84px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* ---------- QR pembayaran ---------- */
+.qr-wrap { text-align: center; padding: 8px 28px 28px; }
+.qr-box {
+  display: inline-block; padding: 18px; background: #fff; border: 3px solid var(--navy); border-radius: 18px;
+  box-shadow: var(--shadow); position: relative; animation: pop .5s var(--ease) both;
+}
+.qr-box::after {
+  content: "QRIS DUMMY"; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--yellow); color: var(--navy); font-weight: 800; font-size: .7rem; letter-spacing: .06em;
+  padding: 4px 12px; border-radius: 999px; white-space: nowrap;
+}
+@keyframes pop { from { opacity: 0; transform: scale(.85); } }
+.qr-total { font-family: "Bricolage Grotesque"; font-size: 2rem; font-weight: 800; color: var(--navy); margin: 18px 0 4px; }
+.qr-note { color: var(--muted); font-size: .86rem; max-width: 40ch; margin: 6px auto 18px; }
+
+/* ---------- Toast ---------- */
+.toasts { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); z-index: 200; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.toast {
+  background: var(--navy); color: #fff; padding: 13px 20px; border-radius: 13px; font-weight: 600;
+  display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-lg);
+  animation: toastIn .4s var(--ease) both; max-width: 90vw;
+}
+.toast.ok { background: var(--ok); }
+.toast.err { background: var(--danger); }
+.toast .material-symbols-rounded { color: var(--yellow); }
+.toast.ok .material-symbols-rounded, .toast.err .material-symbols-rounded { color: #fff; }
+@keyframes toastIn { from { opacity: 0; transform: translateY(20px); } }
+.toast.out { animation: toastOut .35s var(--ease) forwards; }
+@keyframes toastOut { to { opacity: 0; transform: translateY(20px); } }
+
+/* ---------- Reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ---------- Loader ---------- */
+.skeleton { background: linear-gradient(90deg, #eef3fc 25%, #dfe8f8 50%, #eef3fc 75%); background-size: 200% 100%; animation: shimmer 1.3s infinite; border-radius: var(--radius); height: 300px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .hero__grid { grid-template-columns: 1fr; }
+  .hero__card { max-width: 420px; }
+  .request-band .inner { grid-template-columns: 1fr; }
+  .footer__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  .nav__links { display: none; }
+  .nav__burger { display: grid; place-items: center; }
+  .nav__links.show {
+    display: flex; position: absolute; top: 68px; left: 0; right: 0; background: #fff; flex-direction: column;
+    padding: 12px; border-bottom: 1px solid var(--line); box-shadow: var(--shadow);
+  }
+  .row2 { grid-template-columns: 1fr; }
+  .hero { padding: 44px 0 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+  .card, .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ==========================================================================
+   Ospek Kit — admin.css
+   ========================================================================== */
+.admin-body { background: var(--bg); }
+
+/* ---------- Login gate ---------- */
+.login-gate {
+  min-height: 100vh; display: grid; place-items: center; padding: 24px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--navy), var(--blue));
+}
+.login-blobs { position: absolute; inset: 0; }
+.login-blobs .blob { opacity: .35; }
+.login-blobs .b1 { background: var(--yellow); }
+.login-card {
+  position: relative; z-index: 1; background: #fff; border-radius: 24px; padding: 34px; width: min(420px, 100%);
+  box-shadow: var(--shadow-lg); text-align: center; animation: cardIn .6s var(--ease) both;
+}
+.login-card h2 { color: var(--navy); margin-top: 6px; }
+.login-card > p { color: var(--muted); font-size: .92rem; }
+.login-card .field { text-align: left; }
+.back-link { display: inline-block; margin-top: 16px; color: var(--muted); font-weight: 600; font-size: .9rem; }
+.back-link:hover { color: var(--blue); }
+
+/* ---------- Layout ---------- */
+.admin-app { display: grid; grid-template-columns: 258px 1fr; min-height: 100vh; }
+
+.side {
+  background: var(--navy); color: #fff; display: flex; flex-direction: column; padding: 20px 14px;
+  position: sticky; top: 0; height: 100vh;
+}
+.side__brand { display: flex; align-items: center; gap: 11px; padding: 6px 8px 20px; }
+.side__brand b { display: block; font-family: "Bricolage Grotesque"; }
+.side__brand small { color: rgba(255,255,255,.6); font-size: .78rem; }
+.side__nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.side__foot { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid rgba(255,255,255,.12); padding-top: 12px; }
+.side__link {
+  display: flex; align-items: center; gap: 11px; background: none; border: none; color: rgba(255,255,255,.82);
+  font: inherit; font-weight: 600; font-size: .94rem; padding: 12px 14px; border-radius: 12px; cursor: pointer;
+  text-align: left; width: 100%; transition: background .2s, color .2s;
+}
+.side__link:hover { background: rgba(255,255,255,.09); color: #fff; }
+.side__link.active { background: var(--blue); color: #fff; }
+.side__link.active .material-symbols-rounded { color: var(--yellow); }
+.pill { margin-left: auto; background: var(--yellow); color: var(--navy); font-size: .72rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+
+.admin-main { padding: 22px 30px 60px; overflow-x: hidden; }
+.admin-top { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.admin-top h1 { font-size: 1.7rem; color: var(--navy); flex: 1; }
+.side-toggle { display: none; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 8px; cursor: pointer; color: var(--navy); }
+
+/* ---------- Tabs ---------- */
+.tab { display: none; animation: fadeUp .4s var(--ease); }
+.tab.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
+
+/* ---------- Stat cards ---------- */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 22px; }
+.stat {
+  background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 20px; position: relative; overflow: hidden;
+  transition: transform .3s var(--ease), box-shadow .3s;
+}
+.stat:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
+.stat .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue); margin-bottom: 12px; }
+.stat b { font-family: "Bricolage Grotesque"; font-size: 2rem; color: var(--navy); display: block; line-height: 1; }
+.stat span { color: var(--muted); font-size: .86rem; font-weight: 600; }
+.stat.accent .ico { background: var(--yellow-soft); color: var(--yellow-2); }
+.stat.accent b { color: var(--blue); }
+
+/* ---------- Panel ---------- */
+.panel { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 22px; margin-bottom: 18px; }
+.panel h3 { color: var(--navy); margin-bottom: 14px; font-size: 1.1rem; }
+.hint { color: var(--muted); font-size: .8rem; margin-top: 5px; }
+.quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.quick-actions button {
+  display: flex; align-items: center; gap: 10px; background: var(--blue-soft); border: none; color: var(--navy);
+  font: inherit; font-weight: 700; padding: 16px; border-radius: 14px; cursor: pointer; transition: background .2s, transform .2s;
+}
+.quick-actions button:hover { background: var(--navy); color: #fff; transform: translateY(-3px); }
+.quick-actions button:hover .material-symbols-rounded { color: var(--yellow); }
+
+/* ---------- Table ---------- */
+.table-wrap { background: #fff; border: 1px solid var(--line); border-radius: 18px; overflow: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; }
+th, td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: .92rem; }
+th { background: var(--bg); color: var(--muted); font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+tr:last-child td { border-bottom: none; }
+tr { transition: background .15s; }
+tbody tr:hover { background: var(--blue-soft); }
+.prod-cell { display: flex; align-items: center; gap: 12px; }
+.prod-cell .ico { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
+.prod-cell .ico .material-symbols-rounded { color: #fff; font-variation-settings: 'FILL' 1; font-size: 22px; }
+.prod-cell b { color: var(--navy); }
+.tag { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: .74rem; font-weight: 700; }
+.tag.prabu { background: #e3ebff; color: var(--blue); }
+.tag.fakultas { background: #dff5eb; color: var(--ok); }
+.tag.jurusan { background: #efe4fb; color: #8a4fd8; }
+.tag.satuan { background: #ffe9cf; color: #c67612; }
+.tag.on { background: #dff5eb; color: var(--ok); }
+.tag.off { background: #ffe1e5; color: var(--danger); }
+.stock-ctrl { display: inline-flex; align-items: center; gap: 6px; }
+.stock-ctrl button { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; color: var(--navy); font-size: 1rem; transition: background .15s; }
+.stock-ctrl button:hover { background: var(--blue-soft); }
+.stock-ctrl b { min-width: 32px; text-align: center; color: var(--navy); }
+.act-btns { display: flex; gap: 6px; justify-content: flex-end; }
+.icon-btn { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: #fff; cursor: pointer; display: grid; place-items: center; color: var(--muted); transition: all .18s; }
+.icon-btn:hover { color: var(--blue); border-color: var(--blue); }
+.icon-btn.danger:hover { color: var(--danger); border-color: var(--danger); }
+
+/* ---------- Requests ---------- */
+.req-list, .order-list { display: grid; gap: 14px; }
+.req-card, .order-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px;
+  transition: box-shadow .2s; animation: fadeUp .3s var(--ease) both;
+}
+.req-card:hover, .order-card:hover { box-shadow: var(--shadow); }
+.req-card__top { display: flex; align-items: start; justify-content: space-between; gap: 14px; }
+.req-card h4 { color: var(--navy); font-size: 1.08rem; }
+.req-card small, .order-card small { color: var(--muted); }
+.req-meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.req-meta span { background: var(--bg); padding: 4px 11px; border-radius: 999px; font-size: .8rem; color: var(--ink); font-weight: 600; }
+.req-design { max-height: 120px; border-radius: 10px; border: 1px solid var(--line); margin-top: 8px; }
+.status-select { border: 2px solid var(--line); border-radius: 10px; padding: 8px 12px; font: inherit; font-weight: 700; cursor: pointer; background: #fff; }
+.status-baro { }
+.badge-status { padding: 5px 12px; border-radius: 999px; font-size: .78rem; font-weight: 800; }
+.badge-status.baru, .badge-status.menunggu { background: var(--yellow-soft); color: var(--yellow-2); }
+.badge-status.ditinjau, .badge-status.diproses { background: #e3ebff; color: var(--blue); }
+.badge-status.tersedia, .badge-status.dibayar, .badge-status.selesai { background: #dff5eb; color: var(--ok); }
+.badge-status.ditolak, .badge-status.batal { background: #ffe1e5; color: var(--danger); }
+
+.order-card__items { display: grid; gap: 6px; margin: 12px 0; }
+.order-card__items div { display: flex; justify-content: space-between; font-size: .9rem; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.order-total { font-family: "Bricolage Grotesque"; font-weight: 800; color: var(--navy); font-size: 1.15rem; }
+
+.check-row { display: grid; gap: 10px; margin: 14px 0; }
+.check { display: flex; align-items: center; gap: 9px; font-weight: 600; color: var(--ink); cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--blue); }
+
+.empty-state { text-align: center; padding: 60px 20px; color: var(--muted); background: #fff; border: 2px dashed var(--line); border-radius: 18px; }
+.empty-state .material-symbols-rounded { font-size: 52px; color: var(--blue); }
+.empty-state b { display: block; color: var(--navy); margin: 8px 0 4px; font-size: 1.1rem; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 860px) {
+  .admin-app { grid-template-columns: 1fr; }
+  .side {
+    position: fixed; left: 0; top: 0; z-index: 90; width: 260px; transform: translateX(-100%); transition: transform .3s var(--ease);
+  }
+  .side.open { transform: translateX(0); box-shadow: var(--shadow-lg); }
+  .side-toggle { display: grid; place-items: center; }
+  .admin-main { padding: 18px; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="ticker" aria-hidden="true"><div class="ticker__track" id="ticker"></div></div>
+
+  <header class="nav">
+    <div class="wrap nav__inner">
+      <a href="#top" class="brand">
+        <span class="brand__logo"><span class="material-symbols-rounded">backpack</span></span>
+        <span id="brandName">Ospek<b>Kit</b></span>
+      </a>
+      <nav class="nav__links" id="navLinks">
+        <a href="#katalog">Katalog</a>
+        <a href="#request">Request Barang</a>
+        <a href="#kontak">Contact Us</a>
+      </nav>
+      <button class="cart-btn" id="cartBtn">
+        <span class="material-symbols-rounded">shopping_cart</span><span>Keranjang</span>
+        <span class="cart-btn__count" id="cartCount">0</span>
+      </button>
+      <button class="nav__burger" id="burger" aria-label="Menu"><span class="material-symbols-rounded">menu</span></button>
+    </div>
+  </header>
+
+  <div style="background:var(--yellow-soft);border-bottom:1px solid var(--yellow);text-align:center;padding:8px;font-size:.85rem;color:var(--navy);font-weight:600">
+    Ini file <b>PREVIEW</b> (data contoh, tanpa server). Versi lengkapnya jalan pakai <code>python app.py</code> — data & admin tersimpan beneran.
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero__blobs"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+      <div class="wrap hero__grid">
+        <div>
+          <span class="eyebrow"><span class="material-symbols-rounded" style="font-size:16px">bolt</span> Pre-Order Dibuka</span>
+          <h1 id="heroTitle">Semua Perlengkapan Ospek, <span class="hl">Satu Tempat.</span></h1>
+          <p class="lead" id="heroSubtitle">Prabu Kit, Fakultas Kit, sampai Jurusan Kit — pre-order sekarang, ambil sebelum hari-H.</p>
+          <div class="hero__search">
+            <span class="material-symbols-rounded">search</span>
+            <input id="heroSearch" type="text" placeholder="Cari kursi goyang, pita medic, Promag, nametag…">
+            <button id="heroSearchBtn">Cari</button>
+          </div>
+          <div class="hero__stats">
+            <div><b id="statProducts">0</b><span>Item ready</span></div>
+            <div><b>QRIS</b><span>Bayar online</span></div>
+            <div><b>Jatinangor</b><span>Area antar</span></div>
+          </div>
+        </div>
+        <div class="hero__card" id="heroCard"></div>
+      </div>
+    </section>
+
+    <section class="section" id="katalog">
+      <div class="wrap">
+        <div class="section__head reveal">
+          <div><h2>Katalog Kit &amp; Perlengkapan</h2><p>Pilih paket kit atau beli satuan. Stok update langsung dari panitia.</p></div>
+        </div>
+        <div class="search-inline reveal">
+          <span class="material-symbols-rounded">search</span>
+          <input id="catalogSearch" type="text" placeholder="Cari barang di katalog…">
+          <button id="catalogClear" title="Bersihkan"><span class="material-symbols-rounded">close</span></button>
+        </div>
+        <div class="filters reveal" id="filters">
+          <button class="filter active" data-cat="semua"><span class="material-symbols-rounded" style="font-size:18px">grid_view</span> Semua</button>
+          <button class="filter" data-cat="prabu"><span class="material-symbols-rounded" style="font-size:18px">school</span> Prabu Kit</button>
+          <button class="filter" data-cat="fakultas"><span class="material-symbols-rounded" style="font-size:18px">apartment</span> Fakultas Kit</button>
+          <button class="filter" data-cat="jurusan"><span class="material-symbols-rounded" style="font-size:18px">menu_book</span> Jurusan Kit</button>
+          <button class="filter" data-cat="satuan"><span class="material-symbols-rounded" style="font-size:18px">category</span> Satuan</button>
+        </div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="request">
+      <div class="wrap">
+        <div class="request-band reveal">
+          <div class="inner">
+            <div>
+              <h2>Barangnya nggak ada? Request aja.</h2>
+              <p>Butuh kursi goyang warna tertentu, pita medic, Promag, Oronamin C, nametag, atau name bag custom? Submit permintaanmu — panitia bakal usahain adain. Nametag &amp; name bag bisa upload design sendiri.</p>
+            </div>
+            <button class="btn-yellow" id="openRequest"><span class="material-symbols-rounded">add_shopping_cart</span> Request Barang</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="kontak">
+      <div class="wrap">
+        <div class="section__head reveal"><div><h2>Contact Us</h2><p>Ada pertanyaan soal pesanan atau request? Hubungi contact person kami.</p></div></div>
+        <div class="contact-grid reveal" id="contactGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__grid">
+      <div>
+        <a href="#top" class="brand" style="color:#fff"><span class="brand__logo"><span class="material-symbols-rounded">backpack</span></span><span>OspekKit</span></a>
+        <p>Pre-order perlengkapan ospek Universitas Padjadjaran, Jatinangor. Prabu, Fakultas, Jurusan — lengkap.</p>
+      </div>
+      <div><h4>Navigasi</h4><a href="#katalog">Katalog</a><a href="#request">Request Barang</a><a href="#kontak">Contact Us</a></div>
+      <div><h4>Kategori</h4><a href="#" data-jump="prabu">Prabu Kit</a><a href="#" data-jump="fakultas">Fakultas Kit</a><a href="#" data-jump="jurusan">Jurusan Kit</a><a href="#" data-jump="satuan">Barang Satuan</a></div>
+    </div>
+    <div class="wrap footer__bottom"><span>© <span id="year"></span> Ospek Kit — Unpad Jatinangor. Prototype.</span></div>
+  </footer>
+
+  <!-- Product modal -->
+  <div class="overlay" id="pdOverlay"><div class="modal"><button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button><div class="pd" id="pdBody"></div></div></div>
+
+  <!-- Request modal -->
+  <div class="overlay" id="reqOverlay"><div class="modal"><button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button>
+    <div class="pd">
+      <span class="pd__cat">Formulir Request</span><h2>Request Barang</h2>
+      <p class="pd__desc">Isi barang yang kamu butuhkan. Kalau nametag/name bag, bisa upload design.</p>
+      <div class="field"><label>Nama barang *</label><input id="reqItem" placeholder="cth: Kursi goyang / Pita medic / Nametag"></div>
+      <div class="row2"><div class="field"><label>Varian / warna / catatan</label><input id="reqVariant" placeholder="cth: warna hijau"></div><div class="field"><label>Jumlah</label><input id="reqQty" type="number" min="1" value="1"></div></div>
+      <div class="field"><label>Detail tambahan</label><textarea id="reqNote" placeholder="Jelaskan spesifikasi yang kamu mau…"></textarea></div>
+      <div class="field"><label>Upload design (opsional)</label>
+        <div class="upload-box" id="reqUploadBox"><span class="material-symbols-rounded">upload_file</span><div>Klik untuk upload gambar design</div></div>
+        <input type="file" id="reqUpload" accept="image/*" hidden><img class="upload-preview" id="reqPreview" hidden>
+      </div>
+      <div class="row2"><div class="field"><label>Nama kamu</label><input id="reqName" placeholder="Nama"></div><div class="field"><label>WhatsApp</label><input id="reqWa" placeholder="08xxx"></div></div>
+      <button class="btn-primary" id="reqSubmit"><span class="material-symbols-rounded">send</span> Kirim Request</button>
+    </div>
+  </div></div>
+
+  <!-- Checkout modal -->
+  <div class="overlay" id="coOverlay"><div class="modal"><div id="coBody"></div></div></div>
+
+
+  <aside class="drawer" id="cartDrawer">
+    <div class="drawer__head"><h3>Keranjang</h3><button class="modal__x" style="position:static;margin:0;float:none" id="cartClose"><span class="material-symbols-rounded">close</span></button></div>
+    <div class="drawer__body" id="cartBody"></div>
+    <div class="drawer__foot" id="cartFoot"></div>
+  </aside>
+  <div class="overlay" id="drawerOverlay" style="z-index:105"></div>
+  <div class="toasts" id="toasts"></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s,r=document)=>r.querySelector(s), $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+  const rupiah = n => "Rp"+(n||0).toLocaleString("id-ID");
+  const CAT_LABEL = {prabu:"Prabu Kit",fakultas:"Fakultas Kit",jurusan:"Jurusan Kit",satuan:"Satuan"};
+
+  const SEED = [
+    {id:1,name:"Prabu Kit Lengkap",category:"prabu",fakultas:"",jurusan:"",description:"Paket lengkap Ospek Kampus (PRABU). Semua wajib-bawa dalam satu tas.",price:89000,stock:40,icon:"backpack",accent:"#2450d8",items:["Nametag + tali","Pita medic (4 warna)","Buku panduan","Air mineral","Snack wajib","Kantong plastik"],variants:[],custom_design:false,featured:true},
+    {id:2,name:"Fakultas Kit — FMIPA",category:"fakultas",fakultas:"FMIPA",jurusan:"",description:"Perlengkapan ospek tingkat fakultas. Nama fakultas bisa diganti dari admin.",price:65000,stock:30,icon:"science",accent:"#1e9e6a",items:["Nametag fakultas","Co-card","Atribut warna fakultas","Name bag"],variants:[],custom_design:false,featured:true},
+    {id:3,name:"Jurusan Kit — Fisika",category:"jurusan",fakultas:"FMIPA",jurusan:"Fisika",description:"Perlengkapan ospek tingkat jurusan. Fakultas & jurusan bisa diganti dari admin.",price:55000,stock:25,icon:"biotech",accent:"#8a4fd8",items:["Nametag jurusan","Atribut khas jurusan","Buku angkatan"],variants:[],custom_design:false,featured:false},
+    {id:4,name:"Kursi Goyang Lipat",category:"satuan",fakultas:"",jurusan:"",description:"Kursi lipat ringan buat duduk pas ospek. Warna menyesuaikan stok.",price:38000,stock:60,icon:"chair",accent:"#e0851b",items:[],variants:["Warna apapun (random)","Biru","Kuning","Hitam"],custom_design:false,featured:false},
+    {id:5,name:"Pita Medic",category:"satuan",fakultas:"",jurusan:"",description:"Pita penanda kondisi medis. Pilih warna sesuai instruksi panitia.",price:5000,stock:200,icon:"medical_services",accent:"#d1394b",items:[],variants:["Ijo","Kuning","Merah","Putih"],custom_design:false,featured:false},
+    {id:6,name:"Promag Tablet",category:"satuan",fakultas:"",jurusan:"",description:"Obat maag, wajib-bawa versi aman. Per strip.",price:9000,stock:120,icon:"healing",accent:"#1e9e6a",items:[],variants:[],custom_design:false,featured:false},
+    {id:7,name:"Oronamin C",category:"satuan",fakultas:"",jurusan:"",description:"Minuman berenergi buat jaga stamina seharian ospek.",price:8000,stock:150,icon:"local_drink",accent:"#f0a91b",items:[],variants:[],custom_design:false,featured:false},
+    {id:8,name:"Nametag Custom",category:"satuan",fakultas:"",jurusan:"",description:"Nametag cetak. Upload design sendiri, atau minta dibuatin.",price:12000,stock:100,icon:"badge",accent:"#2450d8",items:[],variants:["Design sendiri (upload)","Dibuatin panitia kit"],custom_design:true,featured:false},
+    {id:9,name:"Name Bag Custom",category:"satuan",fakultas:"",jurusan:"",description:"Name bag / tas identitas. Sistem sama kayak nametag.",price:15000,stock:80,icon:"shopping_bag",accent:"#8a4fd8",items:[],variants:["Design sendiri (upload)","Dibuatin panitia kit"],custom_design:true,featured:false},
+  ];
+  const DEFAULT_SET = {brand:"Ospek Kit",hero_title:"Semua Perlengkapan Ospek, Satu Tempat.",hero_subtitle:"Prabu Kit, Fakultas Kit, sampai Jurusan Kit — pre-order sekarang, ambil sebelum hari-H. Nggak ada barangnya? Request aja.",banner_text:"PRE-ORDER DIBUKA • GRATIS ONGKIR AREA JATINANGOR • BAYAR QRIS • READY SEBELUM HARI-H",contact_whatsapp:"6281234567890",contact_email:"ospekkit.unpad@gmail.com",contact_instagram:"@ospekkit.unpad",contact_person:"Kak Angeli",qr_note:"QR ini masih DUMMY untuk prototype. Nanti diganti QRIS asli."};
+
+  const store = {
+    get p(){ return JSON.parse(localStorage.getItem("pv_products")||"null") || SEED; },
+    set p(v){ localStorage.setItem("pv_products", JSON.stringify(v)); },
+    get s(){ return Object.assign({}, DEFAULT_SET, JSON.parse(localStorage.getItem("pv_set")||"{}")); },
+    set s(v){ localStorage.setItem("pv_set", JSON.stringify(v)); },
+    get r(){ return JSON.parse(localStorage.getItem("pv_req")||"[]"); },
+    set r(v){ localStorage.setItem("pv_req", JSON.stringify(v)); },
+  };
+  const state = {cat:"semua", q:"", cart:JSON.parse(localStorage.getItem("pv_cart")||"[]"), current:null, cv:"", cd:"", cq:1};
+
+  function toast(msg,type=""){const t=document.createElement("div");t.className="toast "+type;const i=type==="ok"?"check_circle":type==="err"?"error":"info";t.innerHTML=`<span class="material-symbols-rounded">${i}</span><span>${msg}</span>`;$("#toasts").appendChild(t);setTimeout(()=>{t.classList.add("out");setTimeout(()=>t.remove(),350)},3000);}
+
+  function applySettings(){const s=store.s;const[a,b]=(()=>{const p=s.brand.split(" ");return p.length>=2?[p[0]," "+p.slice(1).join(" ")]:[s.brand.slice(0,4),s.brand.slice(4)];})();$("#brandName").innerHTML=`${a}<b>${b}</b>`;
+    const w=s.hero_title.trim().split(" ");$("#heroTitle").innerHTML=w.length>=2?w.slice(0,-2).join(" ")+` <span class="hl">${w.slice(-2).join(" ")}</span>`:s.hero_title;
+    $("#heroSubtitle").textContent=s.hero_subtitle;
+    const bt=s.banner_text.split("•").map(x=>x.trim()).filter(Boolean).map(x=>`<span style="padding:0 26px">◆ ${x}</span>`).join("");$("#ticker").innerHTML=bt+bt;
+    renderContacts();}
+
+  function filtered(){let list=store.p.slice().sort((a,b)=>(b.featured-a.featured)||(b.id-a.id));if(state.cat!=="semua")list=list.filter(p=>p.category===state.cat);
+    if(state.q){const q=state.q.toLowerCase();list=list.filter(p=>[p.name,p.description,p.fakultas,p.jurusan,...p.items,...p.variants].join(" ").toLowerCase().includes(q));}return list;}
+
+  function renderHeroCard(){const feat=store.p.find(p=>p.featured)||store.p[0];if(!feat)return;const chips=(feat.items.length?feat.items:feat.variants).slice(0,4).map(x=>`<span class="chip">${x}</span>`).join("");
+    $("#heroCard").innerHTML=`<div class="hero__tile" style="background:linear-gradient(135deg, ${feat.accent}, var(--navy))"><span class="material-symbols-rounded">${feat.icon}</span></div><span class="pd__cat">${CAT_LABEL[feat.category]}</span><h3>${feat.name}</h3><div class="hero__chip-row">${chips}</div><div style="display:flex;align-items:center;justify-content:space-between"><span class="price">${rupiah(feat.price)}</span><button class="cart-btn" id="heroView"><span class="material-symbols-rounded">visibility</span> Lihat</button></div>`;
+    $("#heroView").onclick=()=>openProduct(feat.id);$("#statProducts").textContent=store.p.length;}
+
+  function stockLabel(p){if(p.stock<=0)return`<span class="card__stock out">Stok habis</span>`;if(p.stock<=10)return`<span class="card__stock low">Sisa ${p.stock}</span>`;return`<span class="card__stock ok">Stok ${p.stock}</span>`;}
+
+  function renderGrid(){const grid=$("#grid");const list=filtered();
+    if(!list.length){grid.innerHTML=`<div class="empty"><span class="material-symbols-rounded">search_off</span><b>Barang nggak ketemu</b><div>Kami mungkin belum jual "<strong>${state.q||"itu"}</strong>". Request aja!</div><button id="emptyReq"><span class="material-symbols-rounded" style="vertical-align:-4px">add</span> Request Barang Ini</button></div>`;$("#emptyReq").onclick=()=>{$("#reqItem").value=state.q;openOverlay("#reqOverlay");};return;}
+    grid.innerHTML=list.map(p=>`<article class="card" data-id="${p.id}"><div class="card__media" style="background:linear-gradient(135deg, ${p.accent}, var(--navy))">${p.featured?`<span class="card__badge">Unggulan</span>`:""}<button class="card__fav"><span class="material-symbols-rounded">favorite</span></button><span class="material-symbols-rounded">${p.icon}</span></div><div class="card__body"><span class="card__cat">${CAT_LABEL[p.category]}${p.fakultas?" · "+p.fakultas:""}</span><h3 class="card__title">${p.name}</h3><p class="card__desc">${p.description}</p><div class="card__foot"><span class="card__price">${rupiah(p.price)}</span>${stockLabel(p)}</div><button class="card__add" data-add="${p.id}"><span class="material-symbols-rounded">${p.variants.length||p.custom_design?"tune":"add_shopping_cart"}</span> ${p.variants.length||p.custom_design?"Pilih opsi":"Tambah"}</button></div></article>`).join("");
+    $$(".card",grid).forEach(c=>{const id=+c.dataset.id;c.addEventListener("click",e=>{if(!e.target.closest("[data-add]")&&!e.target.closest(".card__fav"))openProduct(id);});});
+    $$("[data-add]",grid).forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();const p=store.p.find(x=>x.id===+b.dataset.add);(p.variants.length||p.custom_design)?openProduct(p.id):quickAdd(p);}));
+    $$(".card__fav",grid).forEach(b=>b.addEventListener("click",e=>{e.stopPropagation();b.querySelector(".material-symbols-rounded").style.fontVariationSettings="'FILL' 1";toast("Ditandai favorit","ok");}));
+    requestAnimationFrame(()=>$$(".card",grid).forEach((c,i)=>setTimeout(()=>c.classList.add("in"),i*55)));}
+
+  function readImage(file,cb){if(!file)return;if(file.size>3*1024*1024)return toast("Gambar maks 3MB","err");const fr=new FileReader();fr.onload=()=>cb(fr.result);fr.readAsDataURL(file);}
+
+  function openProduct(id){const p=store.p.find(x=>x.id===id);if(!p)return;state.current=p;state.cv=p.variants[0]||"";state.cd="";state.cq=1;
+    const items=p.items.length?`<div class="pd__section-title"><span class="material-symbols-rounded">checklist</span> Isi Kit</div><ul class="pd__items">${p.items.map(i=>`<li><span class="material-symbols-rounded">check_circle</span>${i}</li>`).join("")}</ul>`:"";
+    const vh=p.variants.length?`<div class="pd__section-title"><span class="material-symbols-rounded">palette</span> Pilih varian</div><div class="variant-row" id="pdV">${p.variants.map((v,i)=>`<button class="variant ${i===0?"active":""}" data-v="${v}">${v}</button>`).join("")}</div>`:"";
+    const up=p.custom_design?`<div class="pd__section-title"><span class="material-symbols-rounded">image</span> Upload design (opsional)</div><div class="upload-box" id="pdUB"><span class="material-symbols-rounded">upload_file</span><div>Klik untuk upload design kamu</div></div><input type="file" id="pdU" accept="image/*" hidden><img class="upload-preview" id="pdP" hidden>`:"";
+    $("#pdBody").innerHTML=`<div class="pd__media" style="background:linear-gradient(135deg, ${p.accent}, var(--navy))"><span class="material-symbols-rounded">${p.icon}</span></div><span class="pd__cat">${CAT_LABEL[p.category]}${p.fakultas?" · "+p.fakultas:""}${p.jurusan?" · "+p.jurusan:""}</span><h2>${p.name}</h2><div class="pd__price">${rupiah(p.price)} <span style="font-size:.9rem;font-weight:600;color:var(--muted)">· ${p.stock>0?"stok "+p.stock:"stok habis"}</span></div><p class="pd__desc">${p.description}</p>${items}${vh}${up}<div class="qty-row"><div class="qty"><button id="qm">−</button><input id="qi" type="text" value="1" readonly><button id="qp">+</button></div><button class="btn-primary" id="pdAdd" ${p.stock<=0?"disabled style='opacity:.5'":""}><span class="material-symbols-rounded">add_shopping_cart</span> ${p.stock<=0?"Stok habis":"Tambah ke keranjang"}</button></div>`;
+    $$("#pdV .variant").forEach(b=>b.onclick=()=>{$$("#pdV .variant").forEach(x=>x.classList.remove("active"));b.classList.add("active");state.cv=b.dataset.v;});
+    $("#qm").onclick=()=>{state.cq=Math.max(1,state.cq-1);$("#qi").value=state.cq;};$("#qp").onclick=()=>{state.cq=Math.min(p.stock||99,state.cq+1);$("#qi").value=state.cq;};
+    if(p.custom_design){$("#pdUB").onclick=()=>$("#pdU").click();$("#pdU").onchange=e=>readImage(e.target.files[0],u=>{state.cd=u;$("#pdP").src=u;$("#pdP").hidden=false;});}
+    $("#pdAdd").onclick=()=>{if(p.stock>0){addToCart(p,state.cq,state.cv,state.cd);closeOverlay("#pdOverlay");}};
+    openOverlay("#pdOverlay");}
+
+  function quickAdd(p){if(p.stock<=0)return toast("Stok habis","err");addToCart(p,1,"","");}
+  function addToCart(p,qty,variant,design){const key=p.id+"|"+variant+"|"+(design?"d":"");const f=state.cart.find(c=>c.key===key);if(f)f.qty+=qty;else state.cart.push({key,id:p.id,name:p.name,price:p.price,icon:p.icon,accent:p.accent,qty,variant,design});persist();bump();toast(`${p.name} masuk keranjang`,"ok");}
+  const persist=()=>localStorage.setItem("pv_cart",JSON.stringify(state.cart));
+  const count=()=>state.cart.reduce((a,c)=>a+c.qty,0), total=()=>state.cart.reduce((a,c)=>a+c.price*c.qty,0);
+  function bump(){const el=$("#cartCount"),n=count();el.textContent=n;el.classList.toggle("show",n>0);el.style.transform="scale(1.4)";setTimeout(()=>el.style.transform="",180);}
+
+  function renderCart(){const b=$("#cartBody"),f=$("#cartFoot");if(!state.cart.length){b.innerHTML=`<div class="cart-empty"><span class="material-symbols-rounded">shopping_cart</span><p>Keranjang masih kosong.<br>Yuk isi dulu!</p></div>`;f.innerHTML="";return;}
+    b.innerHTML=state.cart.map((c,i)=>`<div class="cart-item"><div class="cart-item__ico" style="background:linear-gradient(135deg, ${c.accent}, var(--navy))"><span class="material-symbols-rounded">${c.icon}</span></div><div class="cart-item__info"><b>${c.name}</b><small>${c.variant?c.variant+" · ":""}${c.design?"design custom · ":""}${c.qty} × ${rupiah(c.price)}</small><span class="cart-item__price">${rupiah(c.price*c.qty)}</span></div><button class="rm" data-rm="${i}"><span class="material-symbols-rounded">delete</span></button></div>`).join("");
+    f.innerHTML=`<div class="summary-row"><span>Subtotal</span><span>${rupiah(total())}</span></div><div class="summary-row total"><span>Total</span><span>${rupiah(total())}</span></div><button class="btn-primary" id="coBtn" style="width:100%;margin-top:12px"><span class="material-symbols-rounded">qr_code_2</span> Checkout & Bayar QRIS</button>`;
+    $$("[data-rm]",b).forEach(x=>x.onclick=()=>{state.cart.splice(+x.dataset.rm,1);persist();bump();renderCart();});$("#coBtn").onclick=openCheckout;}
+
+  function openCheckout(){if(!state.cart.length)return;closeDrawer();$("#coBody").innerHTML=`<button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button><div class="pd"><span class="pd__cat">Checkout</span><h2>Data Pemesan</h2><p class="pd__desc">Isi data biar panitia bisa proses & antar pesananmu.</p><div class="row2"><div class="field"><label>Nama lengkap *</label><input id="coName"></div><div class="field"><label>WhatsApp *</label><input id="coWa" placeholder="08xxx"></div></div><div class="row2"><div class="field"><label>Fakultas</label><input id="coFak"></div><div class="field"><label>Jurusan</label><input id="coJur"></div></div><div class="field"><label>Catatan</label><textarea id="coNote"></textarea></div><div class="summary-row total" style="margin:6px 0 14px"><span>Total bayar</span><span>${rupiah(total())}</span></div><button class="btn-primary" id="coPay" style="width:100%"><span class="material-symbols-rounded">qr_code_2</span> Lanjut ke Pembayaran QRIS</button></div>`;
+    bindClose($("#coOverlay"));$("#coPay").onclick=()=>{const n=$("#coName").value.trim(),w=$("#coWa").value.trim();if(!n)return toast("Nama wajib diisi","err");if(!w)return toast("WhatsApp wajib diisi","err");const t=total();const oid=Math.floor(Math.random()*9000+1000);
+      // kurangi stok demo
+      const ps=store.p;state.cart.forEach(c=>{const p=ps.find(x=>x.id===c.id);if(p)p.stock=Math.max(0,p.stock-c.qty);});store.p=ps;
+      showQR(oid,t);state.cart=[];persist();bump();renderCart();renderGrid();renderHeroCard();};openOverlay("#coOverlay");}
+
+  function showQR(oid,t){$("#coBody").innerHTML=`<button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button><div class="qr-wrap"><span class="pd__cat">Pembayaran</span><h2 style="color:var(--navy)">Scan untuk Bayar</h2><div class="qr-total">${rupiah(t)}</div><div style="margin:14px 0 26px"><div class="qr-box">${qrSvg("OSPEKKIT-"+oid+"-"+t)}</div></div><p class="qr-note">${store.s.qr_note}</p><div style="display:flex;gap:10px;max-width:420px;margin:0 auto"><button class="btn-ghost" data-close style="flex:1">Nanti dulu</button><button class="btn-primary" id="qd"><span class="material-symbols-rounded">check</span> Sudah Bayar</button></div><p style="color:var(--muted);font-size:.82rem;margin-top:14px">No. Pesanan: <b>#${oid}</b></p></div>`;
+    bindClose($("#coOverlay"));$("#qd").onclick=()=>{closeOverlay("#coOverlay");toast("Terima kasih! Panitia akan konfirmasi lewat WhatsApp.","ok");};}
+
+  function qrSvg(seed){const N=29,cell=8,size=N*cell;let h=0;for(let i=0;i<seed.length;i++)h=(h*31+seed.charCodeAt(i))>>>0;const rnd=()=>{h=(h*1103515245+12345)&0x7fffffff;return h/0x7fffffff;};let r="";const fin=(x,y)=>{r+=`<rect x="${x*cell}" y="${y*cell}" width="${7*cell}" height="${7*cell}" fill="var(--navy)"/><rect x="${(x+1)*cell}" y="${(y+1)*cell}" width="${5*cell}" height="${5*cell}" fill="#fff"/><rect x="${(x+2)*cell}" y="${(y+2)*cell}" width="${3*cell}" height="${3*cell}" fill="var(--navy)"/>`;};const inF=(x,y)=>(x<8&&y<8)||(x>=N-8&&y<8)||(x<8&&y>=N-8);for(let y=0;y<N;y++)for(let x=0;x<N;x++)if(!inF(x,y)&&rnd()>0.5)r+=`<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="var(--navy)"/>`;fin(0,0);fin(N-7,0);fin(0,N-7);return`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="display:block"><rect width="${size}" height="${size}" fill="#fff"/>${r}<rect x="${11*cell}" y="${11*cell}" width="${7*cell}" height="${7*cell}" rx="6" fill="#fff"/><rect x="${12.2*cell}" y="${12.2*cell}" width="${4.6*cell}" height="${4.6*cell}" rx="8" fill="var(--yellow)"/></svg>`;}
+
+  // Request
+  $("#openRequest").onclick=()=>openOverlay("#reqOverlay");
+  $("#reqUploadBox").onclick=()=>$("#reqUpload").click();
+  $("#reqUpload").onchange=e=>readImage(e.target.files[0],u=>{state._rd=u;$("#reqPreview").src=u;$("#reqPreview").hidden=false;});
+  $("#reqSubmit").onclick=()=>{const it=$("#reqItem").value.trim();if(!it)return toast("Nama barang wajib diisi","err");const arr=store.r;arr.unshift({id:Date.now(),item_name:it,variant:$("#reqVariant").value.trim(),quantity:+$("#reqQty").value||1,note:$("#reqNote").value.trim(),name:$("#reqName").value.trim(),whatsapp:$("#reqWa").value.trim(),design:state._rd||"",status:"baru",created_at:new Date().toISOString()});store.r=arr;toast("Request kamu udah masuk ke panitia. Ditunggu ya!","ok");closeOverlay("#reqOverlay");["#reqItem","#reqVariant","#reqNote","#reqName","#reqWa"].forEach(s=>$(s).value="");$("#reqQty").value=1;$("#reqPreview").hidden=true;state._rd="";};
+
+  function renderContacts(){const s=store.s;const wa=(s.contact_whatsapp||"").replace(/\D/g,"");const cards=[{ico:"chat",title:"WhatsApp",val:s.contact_whatsapp,href:wa?`https://wa.me/${wa}`:null},{ico:"mail",title:"Email",val:s.contact_email,href:`mailto:${s.contact_email}`},{ico:"photo_camera",title:"Instagram",val:s.contact_instagram,href:null},{ico:"person",title:"Contact Person",val:s.contact_person,href:null}];
+    $("#contactGrid").innerHTML=cards.map(c=>`<div class="contact-card"><div class="ico"><span class="material-symbols-rounded">${c.ico}</span></div><h3>${c.title}</h3>${c.href?`<a href="${c.href}" target="_blank" rel="noopener">${c.val}</a>`:`<span>${c.val}</span>`}</div>`).join("");}
+
+
+  // overlay helpers
+  function openOverlay(s){$(s).classList.add("open");document.body.style.overflow="hidden";}
+  function closeOverlay(s){$(s).classList.remove("open");if(!$$(".overlay.open").length&&!$("#cartDrawer").classList.contains("open"))document.body.style.overflow="";}
+  function bindClose(root){$$("[data-close]",root).forEach(b=>b.onclick=()=>closeOverlay("#"+b.closest(".overlay").id));}
+  function openDrawer(){renderCart();$("#cartDrawer").classList.add("open");$("#drawerOverlay").classList.add("open");document.body.style.overflow="hidden";}
+  function closeDrawer(){$("#cartDrawer").classList.remove("open");$("#drawerOverlay").classList.remove("open");if(!$$(".overlay.open").length)document.body.style.overflow="";}
+
+  // bind
+  $("#burger").onclick=()=>$("#navLinks").classList.toggle("show");
+  $("#cartBtn").onclick=openDrawer;$("#cartClose").onclick=closeDrawer;$("#drawerOverlay").onclick=closeDrawer;
+  $$(".overlay").forEach(o=>{o.addEventListener("click",e=>{if(e.target===o)closeOverlay("#"+o.id);});$$("[data-close]",o).forEach(b=>b.onclick=()=>closeOverlay("#"+o.id));});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"){$$(".overlay.open").forEach(o=>closeOverlay("#"+o.id));closeDrawer();}});
+  let tmr;const doSearch=q=>{clearTimeout(tmr);tmr=setTimeout(()=>{state.q=q.trim();renderGrid();},200);};
+  $("#heroSearch").oninput=e=>{$("#catalogSearch").value=e.target.value;doSearch(e.target.value);};
+  $("#heroSearchBtn").onclick=()=>$("#katalog").scrollIntoView({behavior:"smooth"});
+  $("#catalogSearch").oninput=e=>doSearch(e.target.value);
+  $("#catalogClear").onclick=()=>{$("#catalogSearch").value="";$("#heroSearch").value="";state.q="";renderGrid();};
+  $$("#filters .filter").forEach(b=>b.onclick=()=>{$$("#filters .filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");state.cat=b.dataset.cat;renderGrid();});
+  $$("[data-jump]").forEach(a=>a.onclick=e=>{e.preventDefault();const c=a.dataset.jump;$$("#filters .filter").forEach(x=>x.classList.toggle("active",x.dataset.cat===c));state.cat=c;renderGrid();$("#katalog").scrollIntoView({behavior:"smooth"});});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.12});$$(".reveal").forEach(el=>io.observe(el));
+  $("#year").textContent=new Date().getFullYear();
+
+  applySettings();renderHeroCard();renderGrid();bump();
+})();
+</script>
+</body>
+</html>
