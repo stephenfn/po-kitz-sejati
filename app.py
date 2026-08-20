@@ -90,7 +90,7 @@ def init_db():
         );
 
         CREATE TABLE IF NOT EXISTS requests (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            id          SERIAL PRIMARY KEY,
             item_name   TEXT NOT NULL,
             variant     TEXT DEFAULT '',
             quantity    INTEGER DEFAULT 1,
@@ -103,7 +103,7 @@ def init_db():
         );
 
         CREATE TABLE IF NOT EXISTS orders (
-            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            id            SERIAL PRIMARY KEY,
             customer_name TEXT NOT NULL,
             whatsapp      TEXT NOT NULL,
             fakultas      TEXT DEFAULT '',
