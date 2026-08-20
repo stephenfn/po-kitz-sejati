@@ -1,30 +1,31 @@
 """
 Ospek Kit - Pre Order Perlengkapan Ospek Unpad Jatinangor
-Backend: Flask + SQLite (REST API)
+Backend: Flask + PostgreSQL (REST API)
 
 Cara jalanin:
     pip install -r requirements.txt
     python app.py
     buka http://127.0.0.1:5000
 
-Admin panel: http://127.0.0.1:5000/admin  (password: dewaganteng123)
+Admin panel: http://127.0.0.1:5000/admin  (password: dewagantengbanget123)
 """
 
 import json
 import os
-import sqlite3
 from datetime import datetime
 from functools import wraps
 
 from flask import (Flask, g, jsonify, redirect, render_template, request,
                    session)
+import psycopg
+from psycopg.rows import dict_row
 
 # ---------------------------------------------------------------------------
 # Konfigurasi
 # ---------------------------------------------------------------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "ospek.db")
-ADMIN_PASSWORD = "dewaganteng123"          # <-- ganti kalau mau
+DATABASE_URL = os.environ.get("DATABASE_URL")
+ADMIN_PASSWORD = "dewagantengbanget123"          # <-- ganti kalau mau
 SECRET_KEY = "ganti-secret-key-ini-di-produksi"
 
 app = Flask(__name__)
@@ -37,8 +38,9 @@ app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024   # 8 MB (buat upload design 
 # ---------------------------------------------------------------------------
 def get_db():
     if "db" not in g:
-        g.db = sqlite3.connect(DB_PATH)
-        g.db.row_factory = sqlite3.Row
+        if not DATABASE_URL:
+            raise RuntimeError("DATABASE_URL belum dikonfigurasi")
+        g.db = psycopg.connect(DATABASE_URL, row_factory=dict_row)
     return g.db
 
 
@@ -50,11 +52,13 @@ def close_db(_exc):
 
 
 def init_db():
-    db = sqlite3.connect(DB_PATH)
-    db.executescript(
+    if not DATABASE_URL:
+        return
+    db = psycopg.connect(DATABASE_URL, row_factory=dict_row)
+    db.execute(
         """
         CREATE TABLE IF NOT EXISTS products (
-            id           INTEGER PRIMARY KEY AUTOINCREMENT,
+            id           SERIAL PRIMARY KEY,
             name         TEXT NOT NULL,
             category     TEXT NOT NULL,          -- prabu | fakultas | jurusan | satuan
             fakultas     TEXT DEFAULT '',
@@ -122,7 +126,7 @@ def init_db():
             "contact_person": "Kak Angeli",
             "qr_note": "QR ini masih DUMMY untuk prototype. Nanti diganti QRIS asli dari panel admin.",
         }
-        db.execute("INSERT INTO settings (id, data) VALUES (1, ?)",
+        db.execute("INSERT INTO settings (id, data) VALUES (1, %s)",
                    (json.dumps(default_settings),))
 
     # seed produk contoh
@@ -176,7 +180,7 @@ def init_db():
                 """INSERT INTO products
                    (name,category,fakultas,jurusan,description,price,stock,icon,accent,
                     items,variants,custom_design,featured,active,created_at)
-                   VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?)""",
+                   VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,1,%s)""",
                 (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8],
                  json.dumps(row[9]), json.dumps(row[10]), row[11], row[12], now),
             )
@@ -266,7 +270,7 @@ def api_products():
 
 @app.route("/api/products/<int:pid>")
 def api_product(pid):
-    r = get_db().execute("SELECT * FROM products WHERE id=? AND active=1", (pid,)).fetchone()
+    r = get_db().execute("SELECT * FROM products WHERE id=%s AND active=1", (pid,)).fetchone()
     if not r:
         return jsonify({"error": "not found"}), 404
     return jsonify(row_to_product(r))
@@ -280,8 +284,8 @@ def api_create_request():
     db = get_db()
     now = datetime.now().isoformat(timespec="seconds")
     db.execute(
-        """INSERT INTO requests (item_name,variant,quantity,note,name,whatsapp,design,status,created_at)
-           VALUES (?,?,?,?,?,?,?, 'baru', ?)""",
+          """INSERT INTO requests (item_name,variant,quantity,note,name,whatsapp,design,status,created_at)
+              VALUES (%s,%s,%s,%s,%s,%s,%s, 'baru', %s)""",
         (d.get("item_name", "").strip(), d.get("variant", ""),
          int(d.get("quantity") or 1), d.get("note", ""),
          d.get("name", ""), d.get("whatsapp", ""), d.get("design", ""), now),
@@ -305,7 +309,7 @@ def api_create_order():
     total = 0
     clean_items = []
     for it in items:
-        r = db.execute("SELECT * FROM products WHERE id=? AND active=1", (it.get("id"),)).fetchone()
+        r = db.execute("SELECT * FROM products WHERE id=%s AND active=1", (it.get("id"),)).fetchone()
         if not r:
             continue
         qty = max(1, int(it.get("qty") or 1))
@@ -321,17 +325,18 @@ def api_create_order():
 
     now = datetime.now().isoformat(timespec="seconds")
     cur = db.execute(
-        """INSERT INTO orders (customer_name,whatsapp,fakultas,jurusan,items,total,note,status,created_at)
-           VALUES (?,?,?,?,?,?,?, 'menunggu', ?)""",
+          """INSERT INTO orders (customer_name,whatsapp,fakultas,jurusan,items,total,note,status,created_at)
+              VALUES (%s,%s,%s,%s,%s,%s,%s, 'menunggu', %s)
+              RETURNING id""",
         (d.get("customer_name").strip(), d.get("whatsapp").strip(),
          d.get("fakultas", ""), d.get("jurusan", ""),
          json.dumps(clean_items, ensure_ascii=False), total, d.get("note", ""), now),
     )
     # kurangi stok
     for it in clean_items:
-        db.execute("UPDATE products SET stock = MAX(0, stock - ?) WHERE id=?", (it["qty"], it["id"]))
+        db.execute("UPDATE products SET stock = GREATEST(0, stock - %s) WHERE id=%s", (it["qty"], it["id"]))
     db.commit()
-    return jsonify({"ok": True, "order_id": cur.lastrowid, "total": total,
+    return jsonify({"ok": True, "order_id": cur.fetchone()["id"], "total": total,
                     "message": "Pesanan dibuat. Silakan bayar via QRIS."}), 201
 
 
@@ -410,9 +415,9 @@ def api_admin_product_create():
     cur = get_db().execute(
         """INSERT INTO products
            (name,category,fakultas,jurusan,description,price,stock,icon,accent,items,variants,custom_design,featured,active,created_at)
-           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""", p + (now,))
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id""", p + (now,))
     get_db().commit()
-    return jsonify({"ok": True, "id": cur.lastrowid}), 201
+    return jsonify({"ok": True, "id": cur.fetchone()["id"]}), 201
 
 
 @app.route("/api/admin/products/<int:pid>", methods=["PUT"])
@@ -421,8 +426,8 @@ def api_admin_product_update(pid):
     d = request.get_json(force=True, silent=True) or {}
     p = _product_payload(d)
     get_db().execute(
-        """UPDATE products SET name=?,category=?,fakultas=?,jurusan=?,description=?,price=?,stock=?,
-           icon=?,accent=?,items=?,variants=?,custom_design=?,featured=?,active=? WHERE id=?""",
+        """UPDATE products SET name=%s,category=%s,fakultas=%s,jurusan=%s,description=%s,price=%s,stock=%s,
+           icon=%s,accent=%s,items=%s,variants=%s,custom_design=%s,featured=%s,active=%s WHERE id=%s""",
         p + (pid,))
     get_db().commit()
     return jsonify({"ok": True})
@@ -431,7 +436,7 @@ def api_admin_product_update(pid):
 @app.route("/api/admin/products/<int:pid>", methods=["DELETE"])
 @admin_required
 def api_admin_product_delete(pid):
-    get_db().execute("DELETE FROM products WHERE id=?", (pid,))
+    get_db().execute("DELETE FROM products WHERE id=%s", (pid,))
     get_db().commit()
     return jsonify({"ok": True})
 
@@ -441,9 +446,9 @@ def api_admin_product_delete(pid):
 def api_admin_stock(pid):
     d = request.get_json(force=True, silent=True) or {}
     delta = int(d.get("delta") or 0)
-    get_db().execute("UPDATE products SET stock = MAX(0, stock + ?) WHERE id=?", (delta, pid))
+    get_db().execute("UPDATE products SET stock = GREATEST(0, stock + %s) WHERE id=%s", (delta, pid))
     get_db().commit()
-    r = get_db().execute("SELECT stock FROM products WHERE id=?", (pid,)).fetchone()
+    r = get_db().execute("SELECT stock FROM products WHERE id=%s", (pid,)).fetchone()
     return jsonify({"ok": True, "stock": r["stock"] if r else 0})
 
 
@@ -460,7 +465,7 @@ def api_admin_requests():
 def api_admin_request_update(rid):
     d = request.get_json(force=True, silent=True) or {}
     status = d.get("status", "baru")
-    get_db().execute("UPDATE requests SET status=? WHERE id=?", (status, rid))
+    get_db().execute("UPDATE requests SET status=%s WHERE id=%s", (status, rid))
     get_db().commit()
     return jsonify({"ok": True})
 
@@ -468,7 +473,7 @@ def api_admin_request_update(rid):
 @app.route("/api/admin/requests/<int:rid>", methods=["DELETE"])
 @admin_required
 def api_admin_request_delete(rid):
-    get_db().execute("DELETE FROM requests WHERE id=?", (rid,))
+    get_db().execute("DELETE FROM requests WHERE id=%s", (rid,))
     get_db().commit()
     return jsonify({"ok": True})
 
@@ -490,7 +495,7 @@ def api_admin_orders():
 @admin_required
 def api_admin_order_update(oid):
     d = request.get_json(force=True, silent=True) or {}
-    get_db().execute("UPDATE orders SET status=? WHERE id=?", (d.get("status", "menunggu"), oid))
+    get_db().execute("UPDATE orders SET status=%s WHERE id=%s", (d.get("status", "menunggu"), oid))
     get_db().commit()
     return jsonify({"ok": True})
 
@@ -502,13 +507,14 @@ def api_admin_settings_update():
     d = request.get_json(force=True, silent=True) or {}
     current = get_settings()
     current.update({k: v for k, v in d.items()})
-    get_db().execute("UPDATE settings SET data=? WHERE id=1", (json.dumps(current, ensure_ascii=False),))
+    get_db().execute("UPDATE settings SET data=%s WHERE id=1", (json.dumps(current, ensure_ascii=False),))
     get_db().commit()
     return jsonify({"ok": True, "settings": current})
 
 
 # ---------------------------------------------------------------------------
+init_db()
+
 if __name__ == "__main__":
-    init_db()
     print("Ospek Kit siap. Buka http://127.0.0.1:5000  |  admin: /admin")
     app.run(debug=True, port=5000)
