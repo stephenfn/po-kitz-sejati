@@ -56,6 +56,14 @@ def close_db(_exc):
         db.close()
 
 
+@app.errorhandler(Exception)
+def handle_error(exc):
+    db = g.get("db")
+    if db is not None:
+        db.rollback()
+    return jsonify({"error": str(exc) or "Internal server error"}), 500
+
+
 def init_db():
     if not DATABASE_URL:
         return
