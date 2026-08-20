@@ -22,7 +22,10 @@
     const res = await fetch(url, { headers: { "Content-Type": "application/json" }, ...opts });
     let data = {}; try { data = await res.json(); } catch {}
     if (res.status === 401) { showLogin(); throw new Error("unauth"); }
-    if (!res.ok) throw new Error(data.error || "Error");
+    if (!res.ok) {
+      const detail = typeof data.error === "string" ? data.error : JSON.stringify(data);
+      throw new Error(`${res.status}: ${detail || "Server error"}`);
+    }
     return data;
   };
 

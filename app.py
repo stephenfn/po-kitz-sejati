@@ -61,7 +61,8 @@ def handle_error(exc):
     db = g.get("db")
     if db is not None:
         db.rollback()
-    return jsonify({"error": str(exc) or "Internal server error"}), 500
+    detail = str(exc) or "Internal server error"
+    return jsonify({"error": f"{type(exc).__name__}: {detail}"}), 500
 
 
 def init_db():
