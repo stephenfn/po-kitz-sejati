@@ -40,7 +40,10 @@
     if (!pwd) return toast("Isi password dulu", "err");
     try {
       const res = await fetch("/api/admin/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: pwd }) });
-      if (!res.ok) return toast("Password salah", "err");
+      if (!res.ok) {
+        let data = {}; try { data = await res.json(); } catch {}
+        return toast(res.status === 401 ? "Password salah" : (data.error || `Server error (${res.status})`), "err");
+      }
       $("#pwd").value = ""; toast("Berhasil masuk", "ok"); showApp();
     } catch { toast("Server tidak merespon", "err"); }
   }
