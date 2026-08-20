@@ -125,8 +125,8 @@ def init_db():
     db.commit()
 
     # default settings
-    cur = db.execute("SELECT COUNT(*) FROM settings")
-    if cur.fetchone()[0] == 0:
+    cur = db.execute("SELECT COUNT(*) AS count FROM settings")
+    if cur.fetchone()["count"] == 0:
         default_settings = {
             "brand": "Ospek Kit",
             "tagline": "Pre-Order Perlengkapan Ospek",
@@ -144,8 +144,8 @@ def init_db():
                    (json.dumps(default_settings),))
 
     # seed produk contoh
-    cur = db.execute("SELECT COUNT(*) FROM products")
-    if cur.fetchone()[0] == 0:
+    cur = db.execute("SELECT COUNT(*) AS count FROM products")
+    if cur.fetchone()["count"] == 0:
         now = datetime.now().isoformat(timespec="seconds")
         seed = [
             # (name, category, fakultas, jurusan, desc, price, stock, icon, accent, items, variants, custom, featured)
