@@ -329,7 +329,7 @@
   }
 
   function showQR(orderId, total) {
-    const qr = makeQrSvg("OSPEKKIT-" + orderId + "-" + total);
+    const qr = `<img src="/qr-dummy.svg" alt="QRIS pembayaran" style="display:block;max-width:100%;height:auto">`;
     $("#coBody").innerHTML = `
       <button class="modal__x" data-close><span class="material-symbols-rounded">close</span></button>
       <div class="qr-wrap">
@@ -349,31 +349,6 @@
       closeOverlay("#coOverlay");
       toast("Terima kasih! Panitia akan konfirmasi lewat WhatsApp.", "ok");
     });
-  }
-
-  // QR-like pattern (dummy) — deterministik dari seed
-  function makeQrSvg(seed) {
-    const N = 29, cell = 8, pad = 0, size = N * cell;
-    let h = 0; for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-    const rnd = () => { h = (h * 1103515245 + 12345) & 0x7fffffff; return h / 0x7fffffff; };
-    let rects = "";
-    const finder = (x, y) => {
-      rects += `<rect x="${x*cell}" y="${y*cell}" width="${7*cell}" height="${7*cell}" fill="var(--navy)"/>`;
-      rects += `<rect x="${(x+1)*cell}" y="${(y+1)*cell}" width="${5*cell}" height="${5*cell}" fill="#fff"/>`;
-      rects += `<rect x="${(x+2)*cell}" y="${(y+2)*cell}" width="${3*cell}" height="${3*cell}" fill="var(--navy)"/>`;
-    };
-    const inFinder = (x, y) =>
-      (x < 8 && y < 8) || (x >= N - 8 && y < 8) || (x < 8 && y >= N - 8);
-    for (let y = 0; y < N; y++)
-      for (let x = 0; x < N; x++)
-        if (!inFinder(x, y) && rnd() > 0.5)
-          rects += `<rect x="${x*cell}" y="${y*cell}" width="${cell}" height="${cell}" fill="var(--navy)"/>`;
-    finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
-    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="display:block">
-      <rect width="${size}" height="${size}" fill="#fff"/>${rects}
-      <rect x="${11*cell}" y="${11*cell}" width="${7*cell}" height="${7*cell}" rx="6" fill="#fff"/>
-      <rect x="${12.2*cell}" y="${12.2*cell}" width="${4.6*cell}" height="${4.6*cell}" rx="8" fill="var(--yellow)"/>
-    </svg>`;
   }
 
   /* ---------- Request ---------- */

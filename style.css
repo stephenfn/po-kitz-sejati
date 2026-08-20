@@ -440,7 +440,7 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow); position: relative; animation: pop .5s var(--ease) both;
 }
 .qr-box::after {
-  content: "QRIS DUMMY"; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
+  content: "QRIS"; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%);
   background: var(--yellow); color: var(--navy); font-weight: 800; font-size: .7rem; letter-spacing: .06em;
   padding: 4px 12px; border-radius: 999px; white-space: nowrap;
 }
